@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Currency Calculator</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Valūtas kalkulātors</h1>
+      <label for="amount">Daudzums:</label>
+      <input type="number" id="amount" placeholder="Ievadi daudzumu" />
+
+      <br />
+
+      <label for="from-currency">No:</label>
+      <select id="from-currency">
+        <option value="EUR">EUR</option>
+        <option value="USD">USD</option>
+        <option value="GBP">GBP</option>
+      </select>
+
+      <label for="to-currency">Uz:</label>
+      <select id="to-currency">
+        <option value="EUR">EUR</option>
+        <option value="USD">USD</option>
+        <option value="GBP">GBP</option>
+      </select>
+
+      <br />
+
+      <button id="convert-btn">Konvertēt</button>
+      <div id="result"></div>
+      <div id="history"></div>
+    </div>
+    <script>
+      const toCurrencyInput = document.getElementById("to-currency");
+      const fromCurrencyInput = document.getElementById("from-currency");
+      const btn = document.getElementById("convert-btn");
+      const amountInput = document.getElementById("amount");
+      const result = document.getElementById("result");
+      const history = document.getElementById("history");
+
+      let historyArray = [];
+
+      function handleClick() {
+        const fromCurrency = fromCurrencyInput.value;
+        const toCurrency = toCurrencyInput.value;
+        const amount = parseFloat(amountInput.value);
+
+        let validationStatus = validateInputs(amount);
+        if (validationStatus === false) {
+          return;
+        }
+
+        // if (isNaN(amount) || amount <= 0) {
+        //   result.innerHTML = "Ievadi derīgu daudzumu";
+        //   return;
+        // }
+
+        let convertedAmount = convertCurrency(fromCurrency, toCurrency, amount);
+        let resultText = `${amount} ${fromCurrency} = ${convertedAmount} ${toCurrency}`;
+
+        result.innerHTML = resultText;
+        historyArray.push(resultText);
+
+        displayHistory();
+      }
+      function convertCurrency(from, to, amount) {
+        switch (from) {
+          case "USD":
+            return amount * { EUR: 0.85, GBP: 0.75, USD: 1 }[to];
+
+          case "EUR":
+            return amount * { USD: 1.18, GBP: 0.88, EUR: 1 }[to];
+
+          case "GBP":
+            return amount * { USD: 1.33, EUR: 1.14, GBP: 1 }[to];
+        }
+      }
+
+      function displayHistory() {
+        history.innerHTML = historyArray.join("<br>");
+      }
+
+      function validationStatus(amount){
+        if (isNaN(amount) || amount <= 0) {
+          result.innerHTML = "Ievadi derīgu daudzumu";
+          return;
+      }}
+
+      btn.addEventListener("click", handleClick);
+    </script>
+  </body>
+</html>
